@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ConvertirTabla:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ConvertirTabla_jar</output-path>
+    <root id="archive" name="ConvertirTabla.jar">
+      <element id="module-output" name="ConvertirTabla" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/poi-5.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/poi-ooxml-5.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/lib/commons-collections4-4.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/ooxml-lib/xmlbeans-5.1.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/lib/commons-io-2.11.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/poi-ooxml-full-5.2.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/ooxml-lib/slf4j-api-1.7.36.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/lib/log4j-api-2.18.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../poi-bin-5.2.3-20220909/poi-bin-5.2.3/ooxml-lib/commons-compress-1.21.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

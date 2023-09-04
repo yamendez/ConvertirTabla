@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="poi-5.2.3">
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/poi-5.2.3.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/poi-ooxml-5.2.3.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/lib/commons-collections4-4.4.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/ooxml-lib/xmlbeans-5.1.1.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/lib/commons-io-2.11.0.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/poi-ooxml-full-5.2.3.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/ooxml-lib/slf4j-api-1.7.36.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/lib/log4j-api-2.18.0.jar" />
+    <archive path="D:/Cursos/Java/poi-bin-5.2.3-20220909/poi-bin-5.2.3/ooxml-lib/commons-compress-1.21.jar" />
+  </library>
+</eclipse-userlibraries>
+
