@@ -1,6 +1,4 @@
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
@@ -23,6 +21,8 @@ public class ConvertirTabla extends JFrame{
     private JButton btnBuscar;
     private JButton btnEjecutar;
     private JCheckBox chbAgreAtri;
+    private JRadioButton insertarRadioButton;
+    private JRadioButton eliminarRadioButton;
     private String nomTabla, campNumeros, direccion, val, mensaje;
     private File directorio;
 
@@ -190,6 +190,7 @@ public class ConvertirTabla extends JFrame{
             if (Integer.parseInt(s) == j) {
                 b = true;
             }
+            if(b) break;
         }
         return b;
     }
