@@ -2,6 +2,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -88,6 +90,8 @@ public class ConvertirTabla extends JFrame{
 
                         if(insertarRadioButton.isSelected()){
                             insertarSQL(hoja,checkbox, escribir);
+                        }else if(eliminarRadioButton.isSelected()){
+                            eliminarSQL(hoja, escribir);
                         }
 
 
@@ -106,6 +110,13 @@ public class ConvertirTabla extends JFrame{
                 }
             }
         });
+
+        eliminarRadioButton.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                chbAgreAtri.setEnabled(!eliminarRadioButton.isSelected());
+            }
+        });
     }
     public boolean columnaExite(int j, String[] arreglo){
         boolean b = false;
@@ -118,6 +129,9 @@ public class ConvertirTabla extends JFrame{
         return b;
     }
 
+    /**
+     * Crea un txt con formato de insert en sql
+     */
     public void insertarSQL(Sheet hoja, boolean checkbox, FileWriter escribir) throws IOException {
         int numero_filas = hoja.getLastRowNum();
         int numero_columnas = 0;
@@ -190,6 +204,102 @@ public class ConvertirTabla extends JFrame{
             }else {
                 mensaje = "INSERT INTO " + nomTabla +"\nVALUES ("+mensajeValor.toUpperCase()+");\n";
             }
+
+            mensajeValor = "";
+            mensajeCampos = "";
+            escribir.write(mensaje+"\n");
+
+            if(cont == 50){
+                escribir.write("COMMIT;\n\n");
+                cont = 0;
+            } else if (i == (lista_campos.length - 1) && cont > 0) {
+                escribir.write("COMMIT;");
+            }
+        }
+    }
+
+    public void eliminarSQL(Sheet hoja, FileWriter escribir) throws IOException{
+        int numero_filas = hoja.getLastRowNum();
+        int numero_columnas = 0;
+        for(int i = 0; i <= numero_filas; i++) {
+            Row fila = hoja.getRow(i);
+
+            numero_columnas = fila.getLastCellNum();
+            //break;
+        }
+
+        String[][] lista_campos = new String[numero_filas+1][numero_columnas];// String[numero_filas+1][13]
+        String[] seleccionColum = campNumeros.replace(" ", "").split(",");
+        String mensajeCampos = "", mensajeValor = "";
+        boolean columnasVacia = campNumeros.equals("");
+
+        //Columna -1
+        if(!columnasVacia){
+            int[] columna = new int[seleccionColum.length];
+            for (int i = 0; i < columna.length; i++) {
+                columna[i] = Integer.parseInt(seleccionColum[i]) -1;
+                seleccionColum[i] = String.valueOf(columna[i]);
+            }
+        }
+
+
+        // Leer filas
+        for(int i = 0; i <= numero_filas; i++){// igual agregado//quite +1
+            Row fila = hoja.getRow(i);
+
+            // Leer columnas
+            for(int j = 0; j < numero_columnas; j++){
+                Cell celda = fila.getCell(j);
+                DataFormatter formatter = new DataFormatter();
+                val = formatter.formatCellValue(celda) + "";
+
+                lista_campos[i][j] = val;
+
+            }
+
+        }
+
+        int cont = 0;
+
+        //Convirtiendo a sentencia sql
+        for(int i = 1; i < lista_campos.length; i++){
+            for(int j = 0; j < lista_campos[i].length; j++) {
+
+
+
+                if(columnaExite(j,seleccionColum)){
+                    mensajeValor += lista_campos[0][j] + "=" +lista_campos[i][j]+", ";
+                    mensajeValor = mensajeValor.replace("\"","");
+                }else {
+                    mensajeValor += lista_campos[0][j] + "=" + "'"+lista_campos[i][j]+"', ";
+                }
+//                mensajeCampos += lista_campos[0][j] + ", ";
+//
+//                if(columnasVacia){
+//                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
+//                }else if(columnaExite(j, seleccionColum)){
+//                    mensajeValor += lista_campos[i][j]+ ", ";
+//                    mensajeValor = mensajeValor.replace("\"","");
+//
+//                }else{
+//                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
+//                    mensajeValor = mensajeValor.replace("\"","");
+//                }
+
+            }
+
+            cont += 1;
+            //mensajeCampos = mensajeCampos.substring(0,mensajeCampos.length() - 2);
+            mensajeValor = mensajeValor.substring(0, mensajeValor.length() - 2);
+
+            mensaje = "DELETE FROM " + nomTabla +
+                    "\nWHERE "+mensajeValor.toUpperCase()+";\n";
+//            if(checkbox){
+//                mensaje = "DELETE FROM " + nomTabla +
+//                        "("+mensajeCampos.toUpperCase()+") \nVALUES ("+mensajeValor.toUpperCase()+");\n";
+//            }else {
+//                mensaje = "INSERT INTO " + nomTabla +"\nVALUES ("+mensajeValor.toUpperCase()+");\n";
+//            }
 
             mensajeValor = "";
             mensajeCampos = "";
