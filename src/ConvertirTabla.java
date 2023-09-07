@@ -227,6 +227,9 @@ public class ConvertirTabla extends JFrame{
             numero_columnas = fila.getLastCellNum();
             //break;
         }
+        if(numero_columnas > 13){
+            numero_columnas = 13;
+        }
 
         String[][] lista_campos = new String[numero_filas+1][numero_columnas];// String[numero_filas+1][13]
         String[] seleccionColum = campNumeros.replace(" ", "").split(",");
@@ -265,44 +268,22 @@ public class ConvertirTabla extends JFrame{
         for(int i = 1; i < lista_campos.length; i++){
             for(int j = 0; j < lista_campos[i].length; j++) {
 
-
-
                 if(columnaExite(j,seleccionColum)){
-                    mensajeValor += lista_campos[0][j] + "=" +lista_campos[i][j]+", ";
+                    mensajeValor += lista_campos[0][j] + "=" +lista_campos[i][j]+" AND ";
                     mensajeValor = mensajeValor.replace("\"","");
                 }else {
-                    mensajeValor += lista_campos[0][j] + "=" + "'"+lista_campos[i][j]+"', ";
+                    mensajeValor += lista_campos[0][j] + "=" + "'"+lista_campos[i][j]+"' AND ";
                 }
-//                mensajeCampos += lista_campos[0][j] + ", ";
-//
-//                if(columnasVacia){
-//                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
-//                }else if(columnaExite(j, seleccionColum)){
-//                    mensajeValor += lista_campos[i][j]+ ", ";
-//                    mensajeValor = mensajeValor.replace("\"","");
-//
-//                }else{
-//                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
-//                    mensajeValor = mensajeValor.replace("\"","");
-//                }
 
             }
 
             cont += 1;
-            //mensajeCampos = mensajeCampos.substring(0,mensajeCampos.length() - 2);
-            mensajeValor = mensajeValor.substring(0, mensajeValor.length() - 2);
+            mensajeValor = mensajeValor.substring(0, mensajeValor.length() - 5);
 
             mensaje = "DELETE FROM " + nomTabla +
                     "\nWHERE "+mensajeValor.toUpperCase()+";\n";
-//            if(checkbox){
-//                mensaje = "DELETE FROM " + nomTabla +
-//                        "("+mensajeCampos.toUpperCase()+") \nVALUES ("+mensajeValor.toUpperCase()+");\n";
-//            }else {
-//                mensaje = "INSERT INTO " + nomTabla +"\nVALUES ("+mensajeValor.toUpperCase()+");\n";
-//            }
 
             mensajeValor = "";
-            mensajeCampos = "";
             escribir.write(mensaje+"\n");
 
             if(cont == 50){
