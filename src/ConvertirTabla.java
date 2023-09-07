@@ -85,89 +85,12 @@ public class ConvertirTabla extends JFrame{
 //                        File file = new File(nomTabla+"-"+df.format(d)+".txt");
                         File file = new File(directorio, nomTabla+"-"+df.format(d)+".txt");
                         escribir = new FileWriter(file, false);
-                        int numero_filas = hoja.getLastRowNum();
-                        int numero_columnas = 0;
-                        for(int i = 0; i <= numero_filas; i++) {
-                            Row fila = hoja.getRow(i);
 
-                            numero_columnas = fila.getLastCellNum();
-                            //break;
-                        }
-
-                        String[][] lista_campos = new String[numero_filas+1][numero_columnas];// quite +1
-                        String[] seleccionColum = campNumeros.replace(" ", "").split(",");
-                        String mensajeCampos = "", mensajeValor = "";
-                        boolean columnasVacia = campNumeros.equals("");
-
-                        //Columna -1
-                        if(!columnasVacia){
-                            int[] columna = new int[seleccionColum.length];
-                            for (int i = 0; i < columna.length; i++) {
-                                columna[i] = Integer.parseInt(seleccionColum[i]) -1;
-                                seleccionColum[i] = String.valueOf(columna[i]);
-                            }
+                        if(insertarRadioButton.isSelected()){
+                            insertarSQL(hoja,checkbox, escribir);
                         }
 
 
-                        // Leer filas
-                        for(int i = 0; i <= numero_filas; i++){// igual agregado//quite +1
-                            Row fila = hoja.getRow(i);
-
-                            // Leer columnas
-                            for(int j = 0; j < numero_columnas; j++){
-                                Cell celda = fila.getCell(j);
-                                DataFormatter formatter = new DataFormatter();
-                                val = formatter.formatCellValue(celda) + "";
-
-                                lista_campos[i][j] = val;
-
-                            }
-
-                        }
-
-                        int cont = 0;
-
-                        //Convirtiendo a sentencia sql
-                        for(int i = 1; i < lista_campos.length; i++){
-                            for(int j = 0; j < lista_campos[i].length; j++) {
-
-                                mensajeCampos += lista_campos[0][j] + ", ";
-
-                                if(columnasVacia){
-                                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
-                                }else if(columnaExite(j, seleccionColum)){
-                                    mensajeValor += lista_campos[i][j]+ ", ";
-                                    mensajeValor = mensajeValor.replace("\"","");
-
-                                }else{
-                                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
-                                    mensajeValor = mensajeValor.replace("\"","");
-                                }
-
-                            }
-
-                            cont += 1;
-                            mensajeCampos = mensajeCampos.substring(0,mensajeCampos.length() - 2);
-                            mensajeValor = mensajeValor.substring(0, mensajeValor.length() - 2);
-
-                            if(checkbox){
-                                mensaje = "INSERT INTO " + nomTabla +
-                                        "("+mensajeCampos.toUpperCase()+") \nVALUES ("+mensajeValor.toUpperCase()+");\n";
-                            }else {
-                                mensaje = "INSERT INTO " + nomTabla +"\nVALUES ("+mensajeValor.toUpperCase()+");\n";
-                            }
-
-                            mensajeValor = "";
-                            mensajeCampos = "";
-                            escribir.write(mensaje+"\n");
-
-                            if(cont == 50){
-                                escribir.write("COMMIT;\n\n");
-                                cont = 0;
-                            } else if (i == (lista_campos.length - 1) && cont > 0) {
-                                escribir.write("COMMIT;");
-                            }
-                        }
                         escribir.close();
 
                         JOptionPane.showMessageDialog(null,"Operacion realizada correctamente",
@@ -193,6 +116,92 @@ public class ConvertirTabla extends JFrame{
             if(b) break;
         }
         return b;
+    }
+
+    public void insertarSQL(Sheet hoja, boolean checkbox, FileWriter escribir) throws IOException {
+        int numero_filas = hoja.getLastRowNum();
+        int numero_columnas = 0;
+        for(int i = 0; i <= numero_filas; i++) {
+            Row fila = hoja.getRow(i);
+
+            numero_columnas = fila.getLastCellNum();
+            //break;
+        }
+
+        String[][] lista_campos = new String[numero_filas+1][numero_columnas];// quite +1
+        String[] seleccionColum = campNumeros.replace(" ", "").split(",");
+        String mensajeCampos = "", mensajeValor = "";
+        boolean columnasVacia = campNumeros.equals("");
+
+        //Columna -1
+        if(!columnasVacia){
+            int[] columna = new int[seleccionColum.length];
+            for (int i = 0; i < columna.length; i++) {
+                columna[i] = Integer.parseInt(seleccionColum[i]) -1;
+                seleccionColum[i] = String.valueOf(columna[i]);
+            }
+        }
+
+
+        // Leer filas
+        for(int i = 0; i <= numero_filas; i++){// igual agregado//quite +1
+            Row fila = hoja.getRow(i);
+
+            // Leer columnas
+            for(int j = 0; j < numero_columnas; j++){
+                Cell celda = fila.getCell(j);
+                DataFormatter formatter = new DataFormatter();
+                val = formatter.formatCellValue(celda) + "";
+
+                lista_campos[i][j] = val;
+
+            }
+
+        }
+
+        int cont = 0;
+
+        //Convirtiendo a sentencia sql
+        for(int i = 1; i < lista_campos.length; i++){
+            for(int j = 0; j < lista_campos[i].length; j++) {
+
+                mensajeCampos += lista_campos[0][j] + ", ";
+
+                if(columnasVacia){
+                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
+                }else if(columnaExite(j, seleccionColum)){
+                    mensajeValor += lista_campos[i][j]+ ", ";
+                    mensajeValor = mensajeValor.replace("\"","");
+
+                }else{
+                    mensajeValor += "'"+lista_campos[i][j]+ "', ";
+                    mensajeValor = mensajeValor.replace("\"","");
+                }
+
+            }
+
+            cont += 1;
+            mensajeCampos = mensajeCampos.substring(0,mensajeCampos.length() - 2);
+            mensajeValor = mensajeValor.substring(0, mensajeValor.length() - 2);
+
+            if(checkbox){
+                mensaje = "INSERT INTO " + nomTabla +
+                        "("+mensajeCampos.toUpperCase()+") \nVALUES ("+mensajeValor.toUpperCase()+");\n";
+            }else {
+                mensaje = "INSERT INTO " + nomTabla +"\nVALUES ("+mensajeValor.toUpperCase()+");\n";
+            }
+
+            mensajeValor = "";
+            mensajeCampos = "";
+            escribir.write(mensaje+"\n");
+
+            if(cont == 50){
+                escribir.write("COMMIT;\n\n");
+                cont = 0;
+            } else if (i == (lista_campos.length - 1) && cont > 0) {
+                escribir.write("COMMIT;");
+            }
+        }
     }
 
     public static void main(String[] args){
