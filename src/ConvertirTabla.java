@@ -96,6 +96,8 @@ public class ConvertirTabla extends JFrame{
 
 
                         escribir.close();
+                        libro.close();
+                        System.gc();
 
                         JOptionPane.showMessageDialog(null,"Operacion realizada correctamente",
                                 "Mensaje", JOptionPane.INFORMATION_MESSAGE);
