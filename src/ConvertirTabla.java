@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +28,8 @@ public class ConvertirTabla extends JFrame{
     private JCheckBox chbAgreAtri;
     private JRadioButton insertarRadioButton;
     private JRadioButton eliminarRadioButton;
-    private String nomTabla, campNumeros, direccion, val, mensaje;
+    private JTextField txtNomHoja;
+    private String nomTabla, campNumeros, direccion, nomHoja;
     private File directorio;
 
 
@@ -52,7 +56,8 @@ public class ConvertirTabla extends JFrame{
 
                     File fichero = fc.getSelectedFile();
                     txtBuscar.setText(fichero.getAbsolutePath());
-                    direccion = fichero.getAbsolutePath();
+                    //direccion = fichero.getAbsolutePath();
+                    direccion = fichero.toURI().toString();
                     directorio = fichero.getParentFile();
 
                 }
@@ -65,6 +70,7 @@ public class ConvertirTabla extends JFrame{
                     nomTabla = txtNomTabla.getText().toUpperCase();
                     campNumeros = txtNumeros.getText();
                     boolean checkbox = chbAgreAtri.isSelected();
+                    nomHoja = txtNomHoja.getText();
 
                     Date d = new Date();
                     DateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -74,29 +80,23 @@ public class ConvertirTabla extends JFrame{
                     FileWriter escribir = null;
 
                     //Validando que exista una direccion de archivo
-                    if(direccion == null || nomTabla.equals("")){
-                        JOptionPane.showMessageDialog(null,"Debe llenar los " +
-                                "campos Nombre Tabla y Archivo.","Error Campos Vacios", JOptionPane.ERROR_MESSAGE);
+                    if(direccion == null || nomTabla.equals("") || nomHoja.equals("")){
+                        JOptionPane.showMessageDialog(null,"Debe llenar todos los " +
+                                "campos.","Error Campos Vacios", JOptionPane.ERROR_MESSAGE);
                     }else {
-                        FileInputStream archivo = new FileInputStream(direccion);
-                        //XSSFWorkbook libro =  new XSSFWorkbook(archivo);//
-                        Workbook libro = new XSSFWorkbook(archivo);
-                        hoja = libro.getSheetAt(0);
-
 
 //                        File file = new File(nomTabla+"-"+df.format(d)+".txt");
                         File file = new File(directorio, nomTabla+"-"+df.format(d)+".txt");
                         escribir = new FileWriter(file, false);
 
-                        if(insertarRadioButton.isSelected()){
-                            insertarSQL(hoja,checkbox, escribir);
-                        }else if(eliminarRadioButton.isSelected()){
-                            eliminarSQL(hoja, escribir);
-                        }
+                        URI uri = new URI(direccion);
+                        URL url = uri.toURL();
+
+                        new ExcelReaderHandler2(file, escribir, campNumeros, nomTabla, nomHoja,checkbox,
+                                insertarRadioButton.isSelected(),eliminarRadioButton.isSelected()).readExcelFile(new File(url.toURI()));
 
 
                         escribir.close();
-                        libro.close();
                         System.gc();
 
                         JOptionPane.showMessageDialog(null,"Operacion realizada correctamente",
@@ -105,9 +105,10 @@ public class ConvertirTabla extends JFrame{
                         txtBuscar.setText("");
                         txtNomTabla.setText("");
                         txtNumeros.setText("");
+                        txtNomHoja.setText("");
                     }
 
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     throw new RuntimeException(ex);
                 }
             }
@@ -120,7 +121,7 @@ public class ConvertirTabla extends JFrame{
             }
         });
     }
-    public boolean columnaExite(int j, String[] arreglo){
+    /*public boolean columnaExite(int j, String[] arreglo){
         boolean b = false;
         for (String s : arreglo) {
             if (Integer.parseInt(s) == j) {
@@ -131,9 +132,9 @@ public class ConvertirTabla extends JFrame{
         return b;
     }
 
-    /**
+    *//**
      * Crea un txt con formato de insert en sql
-     */
+     *//*
     public void insertarSQL(Sheet hoja, boolean checkbox, FileWriter escribir) throws IOException {
         int numero_filas = hoja.getLastRowNum();
         int numero_columnas = 0;
@@ -295,7 +296,7 @@ public class ConvertirTabla extends JFrame{
                 escribir.write("COMMIT;");
             }
         }
-    }
+    }*/
 
     public static void main(String[] args){
         JFrame frame = new JFrame("Convertir Tabla");
